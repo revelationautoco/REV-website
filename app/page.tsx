@@ -1,65 +1,191 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { PACKAGES } from "@/lib/packages";
+import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { GoogleReviews } from "@/components/reviews/GoogleReviews";
+import { HomeFinalCtas, HomeHeroCtas } from "@/components/home/HomeCtas";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 opacity-40">
+          <div className="absolute -top-24 left-1/2 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-accent/35 blur-3xl" />
+          <div className="absolute bottom-0 right-[-6rem] h-72 w-[28rem] rounded-full bg-white/10 blur-3xl" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        <Container className="py-14 md:py-20">
+          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <p className="text-sm text-muted">
+                MOBILE DETAILING • WE COME TO YOUR HOME OR BUSINESS
+              </p>
+              <h1 className="heading mt-3 text-5xl leading-[0.95] md:text-6xl">
+                Showroom-clean results.
+                <br />
+                Driveway convenience.
+              </h1>
+              <p className="mt-5 max-w-lg text-base text-muted md:text-lg">
+                Complete vehicle care—with premium washes, deep interior cleaning, and
+                lasting protection—built around your schedule.
+              </p>
+
+              <HomeHeroCtas />
+
+              <div className="mt-8 grid grid-cols-1 gap-3 rounded-2xl border border-border bg-surface p-4 sm:grid-cols-3">
+                <Stat label="" value="6+ Years of Experience" />
+                <Stat label="Average rating" value="5.0★" />
+                <Stat label="Service area" value="10-30 MI" />
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="relative overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-3xl">
+                  <div className="relative aspect-[4/3] w-full">
+                    <Image
+                      src="/gallery/sedan-before-after.svg"
+                      alt="Vehicle before full detail"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <p className="border-t border-border bg-background/50 px-3 py-2 text-center text-xs font-medium uppercase tracking-wide text-muted">
+                    Before
+                  </p>
+                </div>
+                <div className="relative overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-3xl">
+                  <div className="relative aspect-[4/3] w-full">
+                    <Image
+                      src="/gallery/ford-raptor-after.jpg"
+                      alt="Ford Raptor after full detail"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <div className="border-t border-border bg-background/50 px-3 py-2 text-center">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                      After
+                    </p>
+                    <p className="mt-0.5 text-sm font-medium text-foreground">
+                      Ford Raptor — Full Detail
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {["/gallery/suv-before-after.svg", "/gallery/coupe-before-after.svg", "/gallery/van-before-after.svg"].map(
+                  (src) => (
+                    <div
+                      key={src}
+                      className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-surface"
+                    >
+                      <Image src={src} alt="Detailing result" fill className="object-cover" />
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section id="services" className="border-t border-border bg-surface">
+        <Container className="py-14">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="heading text-3xl">Packages built for your car</h2>
+              <p className="mt-2 text-sm text-muted">
+                Clear pricing. Simple booking. Upsells only when it makes sense.
+              </p>
+            </div>
+            <Link className="hidden text-sm text-muted hover:text-foreground md:block" href="/packages">
+              See all packages →
+            </Link>
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {PACKAGES.slice(0, 4).map((p) => (
+              <Link
+                key={p.id}
+                href={`/packages?package=${p.id}#book`}
+                className="group rounded-2xl border border-border bg-background/30 p-6 transition hover:bg-background/40"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="heading text-2xl">{p.name}</div>
+                    <div className="mt-1 text-sm text-muted">{p.description}</div>
+                  </div>
+                  <div className="text-sm text-muted">{p.priceLabel}</div>
+                </div>
+                <ul className="mt-4 grid gap-2 text-sm text-muted">
+                  {p.includes.slice(0, 4).map((x) => (
+                    <li key={x} className="flex gap-2">
+                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                      <span>{x}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 text-sm text-foreground">
+                  Book this package →
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-border bg-background">
+        <Container className="py-14">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="heading text-3xl">Before / After</h2>
+              <p className="mt-2 text-sm text-muted">
+                Tap any photo to view full-size.
+              </p>
+            </div>
+            <Link className="hidden text-sm text-muted hover:text-foreground md:block" href="/gallery">
+              View full gallery →
+            </Link>
+          </div>
+          <div className="mt-8">
+            <GalleryGrid />
+          </div>
+        </Container>
+      </section>
+
+      <GoogleReviews />
+
+      <section className="border-t border-border bg-background">
+        <Container className="py-14">
+          <div className="rounded-3xl border border-border bg-surface p-8 md:p-10">
+            <div className="grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <h2 className="heading text-4xl leading-[0.95]">
+                  Ready for a clean you can feel?
+                </h2>
+                <p className="mt-3 text-sm text-muted">
+                  Choose a package and submit your details. We’ll confirm pricing,
+                  arrival window, and any add-ons (pet hair, heavy soil, etc.).
+                </p>
+              </div>
+              <HomeFinalCtas />
+            </div>
+          </div>
+        </Container>
+      </section>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-background/30 p-3">
+      <div className="heading text-2xl">{value}</div>
+      {label ? <div className="mt-1 text-xs text-muted">{label}</div> : null}
     </div>
   );
 }

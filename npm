@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+
+# Minimal shim for environments without system npm.
+# Supports: `npm config get registry`
+
+if [ "${1:-}" = "config" ] && [ "${2:-}" = "get" ] && [ "${3:-}" = "registry" ]; then
+  echo "https://registry.npmjs.org/"
+  exit 0
+fi
+
+echo "npm shim: unsupported command" >&2
+exit 1
+

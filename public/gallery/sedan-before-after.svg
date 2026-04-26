@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#F5F5F5"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect x="40" y="60" width="540" height="780" rx="28" fill="#FFFFFF" stroke="rgba(17,17,17,.12)" stroke-width="4"/>
+  <rect x="620" y="60" width="540" height="780" rx="28" fill="#FFFFFF" stroke="rgba(17,17,17,.12)" stroke-width="4"/>
+  <text x="90" y="140" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="44">BEFORE</text>
+  <text x="670" y="140" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="44">AFTER</text>
+  <g transform="translate(90 250)">
+    <rect width="440" height="260" rx="24" fill="rgba(17,17,17,.03)" stroke="rgba(17,17,17,.12)" stroke-width="3"/>
+    <text x="220" y="150" text-anchor="middle" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="28">Sedan placeholder</text>
+    <text x="220" y="190" text-anchor="middle" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="22">Replace in /public/gallery</text>
+  </g>
+  <g transform="translate(670 250)">
+    <rect width="440" height="260" rx="24" fill="rgba(255,107,0,.16)" stroke="rgba(255,107,0,.75)" stroke-width="3"/>
+    <text x="220" y="150" text-anchor="middle" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="28">Clean + glossy</text>
+    <text x="220" y="190" text-anchor="middle" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="22">Before/After slot</text>
+  </g>
+</svg>
