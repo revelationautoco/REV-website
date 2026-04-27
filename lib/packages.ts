@@ -2,57 +2,78 @@ import type { ServicePackage } from "@/types/package";
 
 export const PACKAGES: ServicePackage[] = [
   {
-    id: "basic",
-    name: "Basic Wash",
-    description: "Quick refresh for a clean, glossy finish.",
+    id: "exterior",
+    name: "EXTERIOR WASH",
+    description: "Swirl-free wash with wheels and finishing touches.",
     includes: [
-      "Foam pre-soak + hand wash",
-      "Wheel faces cleaned",
-      "Tire shine",
-      "Quick interior wipe-down",
-      "Windows (inside + out)",
+      "High-pressure pre-rinse + foam pre-soak",
+      "Two-bucket hand wash (swirl-free)",
+      "Wheels, tires & wheel wells deep cleaned",
+      "Tire dressing applied",
+      "Exterior glass & mirrors cleaned streak-free",
+      "Door jambs & fuel door wiped down",
+      "Final quality inspection",
     ],
-    priceLabel: "Starting at $79",
+    prices: [
+      { category: "Sedan & Small SUV/Crossover", price: 85 },
+      { category: "Large SUV & Truck", price: 110 },
+    ],
   },
   {
     id: "interior",
-    name: "Interior Detail",
-    description: "Deep-clean your cabin—seats, carpets, and plastics.",
+    name: "INTERIOR DETAIL",
+    description: "Deep interior cleaning for a fresh, reset cabin.",
     includes: [
-      "Thorough vacuum",
-      "Steam + brush agitation (as needed)",
-      "Seats cleaned (cloth/leather safe)",
-      "Dashboard/trim cleaned + protected",
-      "Streak-free interior glass",
+      "Full interior vacuum (seats, carpets, mats, crevices)",
+      "All hard surfaces cleaned (dash, console, vents, panels, cup holders)",
+      "Interior glass & mirrors cleaned streak-free",
+      "Door jambs cleaned",
+      "High-traffic area spot treatment",
+      "Final quality inspection",
     ],
-    priceLabel: "Starting at $149",
-    popular: true,
+    prices: [
+      { category: "Sedan & Small SUV/Crossover", price: 175 },
+      { category: "Large SUV & Truck", price: 225 },
+    ],
   },
   {
     id: "full",
-    name: "Full Detail",
-    description: "Inside + out detail for maximum impact.",
+    name: "FULL DETAIL (Interior + Exterior)",
+    description: "The complete top-to-bottom transformation.",
     includes: [
-      "Complete exterior wash + decon (as needed)",
-      "Clay bar (as needed)",
-      "Sealant for gloss + protection",
-      "Full interior detail",
-      "Door jambs cleaned",
+      "Everything in Exterior Wash",
+      "Everything in Interior Detail",
+      "Complete top to bottom transformation",
     ],
-    priceLabel: "Starting at $249",
+    prices: [
+      { category: "Sedan & Small SUV/Crossover", price: 240 },
+      { category: "Large SUV & Truck", price: 299 },
+    ],
   },
   {
-    id: "premium",
-    name: "Premium Protection Detail",
-    description: "Top-tier clean + long-lasting protection for daily drivers.",
+    id: "specialty",
+    name: "SPECIALTY VEHICLES",
+    description: "Motorcycles, RVs, campers, trailers & more",
     includes: [
-      "Enhanced exterior decon (as needed)",
-      "Premium sealant for durability + gloss",
-      "Wheels + tires deep clean",
-      "Trim + glass protection",
-      "Final-touch detail + inspection",
+      "Motorcycles & sport bikes",
+      "RVs & camper vans",
+      "Trailers & work vehicles",
+      "Boats & recreational vehicles",
     ],
-    priceLabel: "Starting at $399",
+    pricingLabel: "Custom Quote",
+    ctaLabel: "Request a Quote",
   },
 ];
+
+export const ADD_ONS = [
+  { name: "Pet Hair Removal", price: 50 },
+  { name: "Heavy Soiling", price: 50 },
+  { name: "Odor Treatment", price: 50 },
+  { name: "Clay Bar Paint Decontamination", price: 60 },
+] as const;
+
+export function formatPrice(n: number) {
+  return `$${n}`;
+}
+
 

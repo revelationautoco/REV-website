@@ -7,7 +7,7 @@
   --surface: #FFFFFF; /* card surface */
   --surface-2: #FFFFFF;
   --muted: #555555; /* secondary text */
-  --border: rgba(17, 17, 17, 0.12); /* light grey border */
+  --border: #111111; /* solid black outlines */
 
   --accent: #FF6B00; /* orange */
   --accent-foreground: #FFFFFF; /* button text */

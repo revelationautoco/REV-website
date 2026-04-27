@@ -10,7 +10,7 @@ const nav = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-sm">
+    <header className="sticky top-0 z-40 border-b-2 border-border bg-white shadow-sm">
       <Container className="flex h-16 items-center justify-between gap-3">
         <Link href="/" className="flex items-baseline gap-2">
           <span className="heading text-2xl leading-none">Revelation</span>
@@ -30,7 +30,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ButtonLink href="/packages" variant="primary" size="sm">
+          <ButtonLink href="/booking" variant="primary" size="sm">
             Book Now
           </ButtonLink>
         </div>

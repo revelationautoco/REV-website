@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { PACKAGES } from "@/lib/packages";
+import { formatPrice, PACKAGES } from "@/lib/packages";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { sendLeadEmails } from "@/lib/email";
 
@@ -68,7 +68,11 @@ export async function POST(req: Request) {
       throw new Error("Missing OWNER_EMAIL or FROM_EMAIL.");
     }
 
-    const subject = pkg ? `${pkg.name} (${pkg.priceLabel})` : `Package ${input.packageId}`;
+    const subject = pkg
+      ? pkg.prices?.length
+        ? `${pkg.name} (Sedan/Small SUV ${formatPrice(pkg.prices[0].price)} • Large SUV/Truck ${formatPrice(pkg.prices[1].price)})`
+        : `${pkg.name} (Custom Quote)`
+      : `Package ${input.packageId}`;
     const customerName = `${input.firstName} ${input.lastName}`.trim();
 
     await sendLeadEmails({

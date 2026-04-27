@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { track } from "@/lib/analytics";
-import { PACKAGES } from "@/lib/packages";
+import { formatPrice, PACKAGES } from "@/lib/packages";
 
 type Props = {
   defaultPackageId?: string;
@@ -117,7 +117,9 @@ export function LeadForm({ defaultPackageId, className, compact }: Props) {
           <select name="packageId" required className={inputClass} defaultValue={initialPackage}>
             {packages.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.name} — {p.priceLabel}
+                {p.prices?.length
+                  ? `${p.name} — Sedan/Small SUV ${formatPrice(p.prices[0].price)} • Large SUV/Truck ${formatPrice(p.prices[1].price)}`
+                  : `${p.name} — ${p.pricingLabel ?? "Custom Quote"}`}
               </option>
             ))}
           </select>

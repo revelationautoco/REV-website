@@ -1,11 +1,20 @@
-export type PackageTier = "basic" | "interior" | "full" | "premium";
+export type PackageTier = "exterior" | "interior" | "full" | "specialty";
+
+export type VehicleCategory = "Sedan & Small SUV/Crossover" | "Large SUV & Truck";
+
+export interface PriceTier {
+  category: VehicleCategory;
+  price: number;
+}
 
 export interface ServicePackage {
   id: PackageTier;
   name: string;
   description: string;
   includes: string[];
-  priceLabel: string;
+  prices?: PriceTier[];
+  pricingLabel?: string;
+  ctaLabel?: string;
   popular?: boolean;
 }
 

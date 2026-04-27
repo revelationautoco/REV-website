@@ -58,7 +58,7 @@ export async function GoogleReviews() {
   const reviews = (data.ok ? data.reviews ?? [] : []).slice(0, 8);
 
   return (
-    <section className="border-t border-border bg-surface">
+    <section className="border-t-2 border-border bg-surface">
       <Container className="py-14">
         <div className="flex items-end justify-between gap-4">
           <div>
@@ -70,7 +70,7 @@ export async function GoogleReviews() {
         </div>
 
         {reviews.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-border bg-background/30 p-6 text-sm text-muted">
+          <div className="mt-8 rounded-2xl border-2 border-border bg-white p-6 text-sm text-muted">
             Reviews will appear here once Google Places is connected.
           </div>
         ) : (
@@ -78,7 +78,7 @@ export async function GoogleReviews() {
             {reviews.map((r, idx) => (
               <div
                 key={`${r.author_name}-${idx}`}
-                className="rounded-2xl border border-border bg-background/30 p-5"
+                className="rounded-2xl border-2 border-border bg-white p-5"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-medium">{r.author_name}</div>

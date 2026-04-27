@@ -32,7 +32,7 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
                 "rounded-full border px-3 py-1 text-sm",
                 filter === s
                   ? "border-transparent bg-accent text-accent-foreground"
-                  : "border-border bg-surface text-muted hover:text-foreground",
+                  : "border-2 border-border bg-surface text-muted hover:text-foreground",
               )}
             >
               {s}
@@ -45,7 +45,7 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
         {items.map((item) => (
           <button
             key={item.src}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-surface"
+            className="group relative overflow-hidden rounded-2xl border-2 border-border bg-surface"
             onClick={() => setLightbox({ src: item.src, alt: item.alt })}
           >
             <div className="relative aspect-[4/3] w-full">
@@ -59,7 +59,7 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
             <div className="flex items-center justify-between gap-2 px-3 py-3 text-left">
               <div className="text-sm">{item.alt}</div>
               {item.service ? (
-                <span className="rounded-full border border-border bg-background/30 px-2 py-0.5 text-xs text-muted">
+                <span className="rounded-full border-2 border-border bg-white px-2 py-0.5 text-xs text-muted">
                   {item.service}
                 </span>
               ) : null}

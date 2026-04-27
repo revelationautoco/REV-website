@@ -32,18 +32,6 @@ export function PackageBooking({ defaultPackageId }: { defaultPackageId?: string
 
       <div className="space-y-6" ref={bookRef}>
         {calendlyUrl ? <CalendlyEmbed url={calendlyUrl} /> : null}
-        <div className="rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
-          {selected ? (
-            <span>
-              Selected package: <span className="text-foreground">{selected}</span>
-            </span>
-          ) : (
-            "Select a package to prefill the booking form."
-          )}
-          <div className="mt-2">
-            If Calendly isn’t set up yet, you can still submit the form below and we’ll confirm by phone/email.
-          </div>
-        </div>
       </div>
     </div>
   );

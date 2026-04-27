@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { PACKAGES } from "@/lib/packages";
+import { formatPrice, PACKAGES } from "@/lib/packages";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { GoogleReviews } from "@/components/reviews/GoogleReviews";
 import { HomeFinalCtas, HomeHeroCtas } from "@/components/home/HomeCtas";
@@ -33,7 +33,7 @@ export default function Home() {
 
               <HomeHeroCtas />
 
-              <div className="mt-8 grid grid-cols-1 gap-3 rounded-2xl border border-border bg-surface p-4 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-3 rounded-2xl border-2 border-border bg-surface p-4 sm:grid-cols-3">
                 <Stat label="" value="6+ Years of Experience" />
                 <Stat label="Average rating" value="5.0★" />
                 <Stat label="Service area" value="10-30 MI" />
@@ -42,7 +42,7 @@ export default function Home() {
 
             <div className="relative">
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="relative overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-3xl">
+                <div className="relative overflow-hidden rounded-2xl border-2 border-border bg-surface sm:rounded-3xl">
                   <div className="relative aspect-[4/3] w-full">
                     <Image
                       src="/gallery/sedan-before-after.svg"
@@ -52,11 +52,11 @@ export default function Home() {
                       priority
                     />
                   </div>
-                  <p className="border-t border-border bg-background/50 px-3 py-2 text-center text-xs font-medium uppercase tracking-wide text-muted">
+                  <p className="border-t-2 border-border bg-white px-3 py-2 text-center text-xs font-medium uppercase tracking-wide text-muted">
                     Before
                   </p>
                 </div>
-                <div className="relative overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-3xl">
+                <div className="relative overflow-hidden rounded-2xl border-2 border-border bg-surface sm:rounded-3xl">
                   <div className="relative aspect-[4/3] w-full">
                     <Image
                       src="/gallery/ford-raptor-after.jpg"
@@ -66,7 +66,7 @@ export default function Home() {
                       priority
                     />
                   </div>
-                  <div className="border-t border-border bg-background/50 px-3 py-2 text-center">
+                  <div className="border-t-2 border-border bg-white px-3 py-2 text-center">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted">
                       After
                     </p>
@@ -81,7 +81,7 @@ export default function Home() {
                   (src) => (
                     <div
                       key={src}
-                      className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-surface"
+                      className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-border bg-surface"
                     >
                       <Image src={src} alt="Detailing result" fill className="object-cover" />
                     </div>
@@ -93,7 +93,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <section id="services" className="border-t border-border bg-surface">
+      <section id="services" className="border-t-2 border-border bg-surface">
         <Container className="py-14">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -108,18 +108,37 @@ export default function Home() {
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {PACKAGES.slice(0, 4).map((p) => (
+            {PACKAGES.map((p) => (
               <Link
                 key={p.id}
                 href={`/packages?package=${p.id}#book`}
-                className="group rounded-2xl border border-border bg-background/30 p-6 transition hover:bg-background/40"
+                className="group rounded-2xl border-2 border-border bg-white p-6 transition hover:shadow-sm"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="heading text-2xl">{p.name}</div>
                     <div className="mt-1 text-sm text-muted">{p.description}</div>
                   </div>
-                  <div className="text-sm text-muted">{p.priceLabel}</div>
+                  <div className="text-right text-sm">
+                    {p.prices?.length ? (
+                      <>
+                        <div className="text-muted">
+                          Sedan/Small SUV:{" "}
+                          <span className="font-medium text-foreground">
+                            {formatPrice(p.prices[0].price)}
+                          </span>
+                        </div>
+                        <div className="text-muted">
+                          Large SUV/Truck:{" "}
+                          <span className="font-medium text-foreground">
+                            {formatPrice(p.prices[1].price)}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="font-bold text-accent">Custom Quote</div>
+                    )}
+                  </div>
                 </div>
                 <ul className="mt-4 grid gap-2 text-sm text-muted">
                   {p.includes.slice(0, 4).map((x) => (
@@ -129,7 +148,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-5 text-sm text-foreground">
+                <div className="mt-5 text-sm font-medium text-foreground underline-offset-4 group-hover:underline decoration-foreground">
                   Book this package →
                 </div>
               </Link>
@@ -138,7 +157,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <section className="border-t border-border bg-background">
+      <section className="border-t-2 border-border bg-background">
         <Container className="py-14">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -159,9 +178,9 @@ export default function Home() {
 
       <GoogleReviews />
 
-      <section className="border-t border-border bg-background">
+      <section className="border-t-2 border-border bg-background">
         <Container className="py-14">
-          <div className="rounded-3xl border border-border bg-surface p-8 md:p-10">
+          <div className="rounded-3xl border-2 border-border bg-surface p-8 md:p-10">
             <div className="grid gap-8 md:grid-cols-2 md:items-center">
               <div>
                 <h2 className="heading text-4xl leading-[0.95]">
@@ -182,9 +201,18 @@ export default function Home() {
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
+  const isLongValue = label === "";
   return (
-    <div className="rounded-xl border border-border bg-background/30 p-3">
-      <div className="heading text-2xl">{value}</div>
+    <div className="flex min-h-20 flex-col justify-center rounded-xl border-2 border-border bg-white p-3">
+      <div
+        className={
+          isLongValue
+            ? "heading text-lg font-bold leading-snug text-foreground md:text-xl"
+            : "heading text-xl font-bold leading-snug text-foreground md:text-2xl"
+        }
+      >
+        {value}
+      </div>
       {label ? <div className="mt-1 text-xs text-muted">{label}</div> : null}
     </div>
   );

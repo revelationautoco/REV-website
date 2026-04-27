@@ -23,12 +23,12 @@ export function CalendlyEmbed({
   }, []);
 
   return (
-    <div className={cn("rounded-2xl border border-border bg-surface p-4", className)}>
+    <div className={cn("rounded-2xl border-2 border-border bg-surface p-4", className)}>
       <div className="heading text-2xl">Book on the calendar</div>
       <p className="mt-1 text-sm text-muted">
         Prefer a confirmed appointment instantly? Use our scheduling link.
       </p>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border bg-background/30">
+      <div className="mt-4 overflow-hidden rounded-xl border-2 border-border bg-white">
         <iframe
           title="Calendly booking"
           src={url}
