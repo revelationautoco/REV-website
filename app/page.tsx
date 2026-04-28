@@ -72,7 +72,6 @@ export default function Home() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="heading text-2xl">{p.name}</div>
-                    <div className="mt-1 text-sm text-muted">{p.description}</div>
                   </div>
                   <div className="text-right text-sm">
                     {p.prices?.length ? (
