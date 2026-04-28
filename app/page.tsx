@@ -10,9 +10,14 @@ export default function Home() {
   return (
     <div>
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 opacity-40">
-          <div className="absolute -top-24 left-1/2 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-accent/35 blur-3xl" />
-          <div className="absolute bottom-0 right-[-6rem] h-72 w-[28rem] rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/gallery/GMC-TERRAIN.JPG"
+            alt="Detailed GMC Terrain"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
         </div>
 
         <Container className="py-14 md:py-20">
@@ -37,56 +42,6 @@ export default function Home() {
                 <Stat label="" value="6+ Years of Experience" />
                 <Stat label="Average rating" value="5.0★" />
                 <Stat label="Service area" value="10-30 MI" />
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="relative overflow-hidden rounded-2xl border-2 border-border bg-surface sm:rounded-3xl">
-                  <div className="relative aspect-[4/3] w-full">
-                    <Image
-                      src="/gallery/sedan-before-after.svg"
-                      alt="Vehicle before full detail"
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                  <p className="border-t-2 border-border bg-white px-3 py-2 text-center text-xs font-medium uppercase tracking-wide text-muted">
-                    Before
-                  </p>
-                </div>
-                <div className="relative overflow-hidden rounded-2xl border-2 border-border bg-surface sm:rounded-3xl">
-                  <div className="relative aspect-[4/3] w-full">
-                    <Image
-                      src="/gallery/ford-raptor-after.jpg"
-                      alt="Ford Raptor after full detail"
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                  <div className="border-t-2 border-border bg-white px-3 py-2 text-center">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                      After
-                    </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">
-                      Ford Raptor — Full Detail
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {["/gallery/suv-before-after.svg", "/gallery/coupe-before-after.svg", "/gallery/van-before-after.svg"].map(
-                  (src) => (
-                    <div
-                      key={src}
-                      className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-border bg-surface"
-                    >
-                      <Image src={src} alt="Detailing result" fill className="object-cover" />
-                    </div>
-                  ),
-                )}
               </div>
             </div>
           </div>

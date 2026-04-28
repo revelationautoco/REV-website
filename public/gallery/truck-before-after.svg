@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
-  <rect width="1200" height="900" fill="#F5F5F5"/>
-  <rect x="70" y="90" width="1060" height="720" rx="28" fill="#FFFFFF" stroke="rgba(17,17,17,.12)" stroke-width="4"/>
-  <text x="110" y="175" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="44">TRUCK PLACEHOLDER</text>
-  <rect x="140" y="260" width="920" height="480" rx="26" fill="rgba(17,17,17,.03)" stroke="rgba(17,17,17,.12)" stroke-width="3"/>
-  <text x="600" y="520" text-anchor="middle" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="26">Drop in real before/after photos</text>
-  <text x="600" y="560" text-anchor="middle" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="20">public/gallery/*.jpg</text>
-  <rect x="140" y="760" width="920" height="16" rx="8" fill="rgba(255,107,0,.45)"/>
-</svg>
