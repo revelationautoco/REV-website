@@ -1,61 +1,53 @@
 import { Container } from "@/components/ui/Container";
 
-type ReviewsPayload = {
-  ok: boolean;
-  business?: { name: string; rating: number; total: number };
-  reviews?: Array<{
-    author_name: string;
-    rating: number;
-    text: string;
-    relative_time_description?: string;
-    time?: number;
-  }>;
+type Review = {
+  author_name: string;
+  rating: 5;
+  text: string;
+  relative_time_description: string;
 };
 
-export async function GoogleReviews() {
-  const key = process.env.GOOGLE_PLACES_API_KEY;
-  const placeId = process.env.GOOGLE_PLACE_ID;
+const REVIEWS: Review[] = [
+  {
+    author_name: "Kelsey Quintana",
+    rating: 5,
+    text: `Avery did an amazing job detailing my Mazda CX-5! He was very nice and respectful. He came to my house and it was such an easy process to get my car looking new again. I would highly recommend Revelation Auto Collective detailing!`,
+    relative_time_description: "13 weeks ago",
+  },
+  {
+    author_name: "Chris Konnecke",
+    rating: 5,
+    text: `Avery recently detailed mine and my wife's cars. He did an outstanding job! Price was great!`,
+    relative_time_description: "13 weeks ago",
+  },
+  {
+    author_name: "Isaiah Casarez",
+    rating: 5,
+    text: `I got my car detailed with Revelation Auto Collective and they did an amazing job! came to my house and made it easy seamless process to get my car looking spotless!`,
+    relative_time_description: "13 weeks ago",
+  },
+  {
+    author_name: "Kevin A. Delgadillo",
+    rating: 5,
+    text: "10/10 detailing !!!",
+    relative_time_description: "13 weeks ago",
+  },
+  {
+    author_name: "Brookelyn Francis",
+    rating: 5,
+    text: `Avery was so great!!! Incredible service, and super personable! Asked me what I wanted most work on and made the whole car look great!`,
+    relative_time_description: "7 days ago",
+  },
+  {
+    author_name: "Collin Johnson",
+    rating: 5,
+    text: `Avery did such a good job for me! I got my dad's car cleaned as a gift and he did such a good job making it look new again. Definitely would recommend.`,
+    relative_time_description: "3 days ago",
+  },
+];
 
-  let data: ReviewsPayload = { ok: true, reviews: [] };
-
-  if (key && placeId) {
-    type PlacesResponse = {
-      result?: {
-        name?: string;
-        rating?: number;
-        user_ratings_total?: number;
-        reviews?: ReviewsPayload["reviews"];
-      };
-      status?: string;
-      error_message?: string;
-    };
-
-    const url = new URL("https://maps.googleapis.com/maps/api/place/details/json");
-    url.searchParams.set("place_id", placeId);
-    url.searchParams.set("fields", "name,rating,user_ratings_total,reviews");
-    url.searchParams.set("reviews_sort", "newest");
-    url.searchParams.set("key", key);
-
-    const res = await fetch(url.toString(), { next: { revalidate: 86400 } });
-    const json = (await res.json()) as PlacesResponse;
-
-    if (res.ok && json?.status === "OK") {
-      const all = json?.result?.reviews ?? [];
-      data = {
-        ok: true,
-        business: {
-          name: json?.result?.name ?? "Revelation Auto Detailing",
-          rating: json?.result?.rating ?? 5,
-          total: json?.result?.user_ratings_total ?? 0,
-        },
-        reviews: (all ?? []).filter((r) => r.rating === 5).slice(0, 8),
-      };
-    } else {
-      data = { ok: false, reviews: [] };
-    }
-  }
-
-  const reviews = (data.ok ? data.reviews ?? [] : []).slice(0, 8);
+export function GoogleReviews() {
+  const reviews = REVIEWS.slice(0, 8);
 
   return (
     <section className="border-t-2 border-border bg-surface">
@@ -86,7 +78,7 @@ export async function GoogleReviews() {
                 </div>
                 <p className="mt-3 text-sm text-muted">{r.text}</p>
                 <div className="mt-3 text-xs text-muted">
-                  {r.relative_time_description ?? ""}
+                  {r.relative_time_description}
                 </div>
               </div>
             ))}
