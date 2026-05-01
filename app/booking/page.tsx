@@ -14,7 +14,7 @@ export default function BookingPage() {
         <p className="mt-2 text-sm text-muted">
           Select a time that works for you — we'll come to you.
         </p>
-        <div className="mt-5 min-h-[520px]">
+        <div className="mt-5 min-h-[600px]">
           <JobberWorkRequestEmbed />
         </div>
       </div>

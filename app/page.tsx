@@ -38,7 +38,7 @@ export default function Home() {
 
               <HomeHeroCtas />
 
-              <div className="mt-8 grid grid-cols-1 gap-3 rounded-2xl border-2 border-border bg-surface p-4 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-3 gap-2 rounded-2xl border-2 border-border bg-surface p-3 md:gap-3 md:p-4">
                 <Stat label="" value="6+ Years of Experience" />
                 <Stat label="Average rating" value="5.0★" />
                 <Stat label="Service area" value="10-30 MI" />
@@ -157,12 +157,12 @@ export default function Home() {
 function Stat({ label, value }: { label: string; value: string }) {
   const isLongValue = label === "";
   return (
-    <div className="flex min-h-20 flex-col justify-center rounded-xl border-2 border-border bg-white p-3">
+    <div className="flex min-h-20 flex-col justify-center rounded-xl border-2 border-border bg-white p-2 md:p-3">
       <div
         className={
           isLongValue
-            ? "heading text-lg font-bold leading-snug text-foreground md:text-xl"
-            : "heading text-xl font-bold leading-snug text-foreground md:text-2xl"
+            ? "heading text-lg font-bold leading-snug text-foreground max-md:text-xs max-md:leading-tight md:text-xl"
+            : "heading text-xl font-bold leading-snug text-foreground max-md:text-sm md:text-2xl"
         }
       >
         {value}
