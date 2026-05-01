@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { siteContact, telHref } from "@/lib/siteContact";
 
 export function SiteFooter() {
   return (
@@ -33,8 +34,8 @@ export function SiteFooter() {
           </p>
           <p>
             Call or text{" "}
-            <a className="text-white" href="tel:+15555555555">
-              (555) 555-5555
+            <a className="text-white" href={telHref()}>
+              {siteContact.phoneDisplay}
             </a>
           </p>
         </div>
