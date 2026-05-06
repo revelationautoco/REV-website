@@ -22,7 +22,7 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
 
   return (
     <div>
-      {withFilter ? (
+      {withFilter && services.length > 1 ? (
         <div className="mb-4 flex flex-wrap gap-2">
           {services.map((s) => (
             <button
@@ -45,7 +45,8 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
         {items.map((item) => (
           <button
             key={item.src}
-            className="group relative overflow-hidden rounded-2xl border-2 border-border bg-surface"
+            type="button"
+            className="group relative overflow-hidden rounded-2xl border-2 border-border bg-surface text-left"
             onClick={() => setLightbox({ src: item.src, alt: item.alt })}
           >
             <div className="relative aspect-[4/3] w-full">
@@ -77,4 +78,3 @@ export function GalleryGrid({ withFilter }: { withFilter?: boolean }) {
     </div>
   );
 }
-

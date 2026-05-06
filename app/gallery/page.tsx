@@ -10,8 +10,7 @@ export default function GalleryPage() {
       <div className="max-w-3xl">
         <h1 className="heading text-5xl leading-[0.95]">Gallery</h1>
         <p className="mt-3 text-base text-muted">
-          A few before/after examples. Updating photos is easy—drop new files into{" "}
-          <code className="rounded bg-white/5 px-1.5 py-0.5">public/gallery</code>.
+          Real cars, real results. Browse before-and-afters from recent jobs.
         </p>
       </div>
 
