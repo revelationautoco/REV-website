@@ -10,7 +10,7 @@ export type GalleryItem = {
 export const GALLERY: GalleryItem[] = [
   {
     src: "/gallery/jaguar-full-detail.jpg",
-    alt: "Jaguar — Inside & Out",
+    alt: "Jaguar — Full Detail, One Step Paint Correction",
     service: "Full Detail",
   },
 ];
