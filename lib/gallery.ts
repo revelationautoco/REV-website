@@ -9,9 +9,9 @@ export type GalleryItem = {
  */
 export const GALLERY: GalleryItem[] = [
   {
-    src: "/gallery/RAPTOR-INTERIOR-BEFORE&AFTER.JPG",
-    alt: "Interior Detail",
-    service: "Interior Detail",
+    src: "/gallery/TERRAIN-WEBSITE-PHOTO.JPG",
+    alt: "GMC Terrain — Exterior Detail",
+    service: "Exterior Detail",
   },
   {
     src: "/gallery/jaguar-full-detail.jpg",
@@ -20,6 +20,11 @@ export const GALLERY: GalleryItem[] = [
   },
   {
     src: "/gallery/F250-INTERIOR-BEFORE&AFTER.JPG",
+    alt: "Interior Detail",
+    service: "Interior Detail",
+  },
+  {
+    src: "/gallery/RAPTOR-INTERIOR-BEFORE&AFTER.JPG",
     alt: "Interior Detail",
     service: "Interior Detail",
   },
