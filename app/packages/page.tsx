@@ -1,5 +1,5 @@
 import { Container } from "@/components/ui/Container";
-import { ADD_ONS, formatPrice } from "@/lib/packages";
+import { ADD_ONS } from "@/lib/packages";
 import { PackagesGrid } from "@/components/packages/PackagesGrid";
 
 export default async function PackagesPage({
@@ -34,7 +34,7 @@ export default async function PackagesPage({
               className="flex items-center justify-between rounded-xl border-2 border-border bg-white p-4"
             >
               <div className="font-medium">{a.name}</div>
-              <div className="text-muted">+{formatPrice(a.price)}</div>
+              <div className="text-right text-muted">+{a.priceLabel}</div>
             </div>
           ))}
         </div>
