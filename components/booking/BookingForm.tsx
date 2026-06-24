@@ -21,6 +21,7 @@ import {
   URL_PARAM_TO_PACKAGE_ID,
 } from "@/lib/packages";
 import { cn } from "@/lib/cn";
+import type { ServicePackage } from "@/types/package";
 
 // ---------------------------------------------------------------------------
 // Schema — UNCHANGED
@@ -297,11 +298,10 @@ export function BookingForm() {
                 return (
                   <PackageCard
                     key={pkg.id}
-                    name={pkg.name}
-                    description={pkg.description}
+                    pkg={pkg}
                     price={price}
                     selected={watchAll.packageId === pkg.id}
-                    onClick={() =>
+                    onSelect={() =>
                       setValue("packageId", pkg.id as BookingFormData["packageId"])
                     }
                   />
@@ -339,13 +339,13 @@ export function BookingForm() {
                       <label
                         key={addon.id}
                         className={cn(
-                          "flex cursor-pointer items-center justify-between gap-3 rounded-xl border-2 px-4 py-3 transition",
+                          "flex cursor-pointer items-start justify-between gap-3 rounded-xl border-2 px-4 py-3 transition",
                           isChecked
                             ? "border-accent bg-accent/5"
                             : "border-border bg-white hover:border-accent/50",
                         )}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
                           <input
                             type="checkbox"
                             value={addon.id}
@@ -354,7 +354,7 @@ export function BookingForm() {
                           />
                           <span className="text-sm font-medium">{addon.name}</span>
                         </div>
-                        <span className="shrink-0 text-xs text-muted">
+                        <span className="text-right text-xs text-muted">
                           +{addon.priceLabel}
                         </span>
                       </label>
@@ -767,24 +767,38 @@ function VehicleTile({
 // ---------------------------------------------------------------------------
 
 function PackageCard({
-  name,
-  description,
+  pkg,
   price,
   selected,
-  onClick,
+  onSelect,
 }: {
-  name: string;
-  description: string;
+  pkg: ServicePackage;
   price: number | null;
   selected: boolean;
-  onClick: () => void;
+  onSelect: () => void;
 }) {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const closePopup = () => setIsPopupOpen(false);
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPopupOpen((prev) => !prev);
+  };
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
       className={cn(
-        "relative rounded-xl border-2 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/40",
+        "relative rounded-xl border-2 p-4 text-left transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/40",
         selected
           ? "border-foreground bg-foreground text-white"
           : "border-border bg-white text-foreground hover:border-foreground/50",
@@ -801,7 +815,7 @@ function PackageCard({
           selected ? "text-white" : "text-foreground",
         )}
       >
-        {name}
+        {pkg.name}
       </div>
       <div className="mt-1.5 text-lg font-bold text-accent">
         {price !== null ? formatPrice(price) : "—"}
@@ -812,9 +826,114 @@ function PackageCard({
           selected ? "text-white/60" : "text-muted",
         )}
       >
-        {description}
+        {pkg.description}
       </p>
-    </button>
+
+      {/* "See what's included" trigger */}
+      <button
+        type="button"
+        onClick={handleLinkClick}
+        className={cn(
+          "mt-2 text-[11px] underline underline-offset-2 transition focus:outline-none",
+          selected ? "text-white/50 hover:text-white/80" : "text-muted/60 hover:text-muted",
+        )}
+      >
+        See what&apos;s included
+      </button>
+
+      {isPopupOpen && (
+        <InclusionsPopup
+          pkg={pkg}
+          onClose={closePopup}
+          onConfirm={() => { onSelect(); closePopup(); }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Inclusions popup (hover tooltip on desktop, bottom-sheet modal on mobile)
+// ---------------------------------------------------------------------------
+
+function InclusionsPopup({
+  pkg,
+  onClose,
+  onConfirm,
+}: {
+  pkg: ServicePackage;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4"
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Panel — bottom sheet on mobile, centered card on sm+ */}
+      <div
+        className="relative flex w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-w-sm sm:rounded-2xl"
+        style={{ maxHeight: "85vh" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex shrink-0 items-start justify-between bg-foreground px-5 py-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
+              What&apos;s Included
+            </p>
+            <h3 className="heading mt-0.5 text-xl text-white">{pkg.name}</h3>
+          </div>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="ml-3 mt-0.5 rounded-lg p-1.5 transition hover:bg-white/10 focus:outline-none"
+            aria-label="Close"
+          >
+            <IconX size={16} className="text-white/70" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-5">
+          {pkg.description && (
+            <p className="mb-4 text-sm text-muted">{pkg.description}</p>
+          )}
+          {pkg.bestFor && (
+            <div className="mb-4 rounded-lg bg-accent/10 px-3 py-2 text-xs">
+              <span className="font-semibold text-foreground">Best for:</span>{" "}
+              <span className="text-muted">{pkg.bestFor}</span>
+            </div>
+          )}
+          <ul className="space-y-2.5">
+            {pkg.includes.map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-sm">
+                <IconCheck
+                  size={14}
+                  strokeWidth={3}
+                  className="mt-0.5 shrink-0 text-accent"
+                />
+                <span className="text-foreground">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Footer */}
+        <div className="shrink-0 border-t-2 border-border bg-surface px-5 py-4">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onConfirm(); }}
+            className="w-full rounded-full bg-accent py-3 text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent/60"
+          >
+            Confirm Selection
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -32,6 +32,8 @@ export interface ServicePackage {
   pricingLabel?: string;
   ctaLabel?: string;
   popular?: boolean;
+  /** Short "best for" context line, shown in the inclusions popup */
+  bestFor?: string;
   /** Estimated service duration for Sedan / Small SUV */
   durationSedan?: string;
   /** Estimated service duration for Large SUV / Truck / Van */

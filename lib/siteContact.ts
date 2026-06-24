@@ -22,7 +22,7 @@ export const siteContact = {
   ),
   email: envOr(
     process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-    "revelationauto.com@gmail.com",
+    "revelationauto.co@gmail.com",
   ),
 } as const;
 

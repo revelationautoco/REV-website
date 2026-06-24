@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ownerEmail = process.env.OWNER_EMAIL ?? "revelationauto.com@gmail.com";
+  const ownerEmail = process.env.OWNER_EMAIL ?? "revelationauto.co@gmail.com";
   const fromEmail =
     process.env.FROM_EMAIL ?? "REV Detailing <no-reply@revelationauto.com>";
 

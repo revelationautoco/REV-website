@@ -4,11 +4,12 @@ export const PACKAGES: ServicePackage[] = [
   {
     id: "bronze-exterior",
     name: "BRONZE EXTERIOR ONLY",
-    description: "A thorough exterior wash — swirl-free with wheels and finishing touches.",
+    description: "The perfect upkeep wash. Fast, thorough, gentle on paint.",
+    bestFor: "Weekly/bi-weekly maintenance",
     includes: [
       "High-pressure pre-rinse + foam pre-soak",
-      "Two-bucket hand wash (swirl-free method)",
-      "Wheels, tires & wheel wells deep cleaned",
+      "Hand wash (microfiber wash mitt)",
+      "Wheels + tires detailed (wheel face & barrels)",
       "Tire dressing applied",
       "Exterior glass & mirrors cleaned streak-free",
       "Door jambs & fuel door wiped down",
@@ -23,14 +24,13 @@ export const PACKAGES: ServicePackage[] = [
   },
   {
     id: "interior",
-    name: "INTERIOR ONLY",
+    name: "BRONZE INTERIOR ONLY",
     description: "Deep interior cleaning for a fresh, reset cabin.",
     includes: [
       "Full interior vacuum (seats, carpets, mats, crevices)",
       "All hard surfaces cleaned (dash, console, vents, panels, cup holders)",
       "Interior glass & mirrors cleaned streak-free",
       "Door jambs cleaned",
-      "High-traffic area spot treatment",
       "Final quality inspection",
     ],
     prices: [
@@ -43,11 +43,13 @@ export const PACKAGES: ServicePackage[] = [
   {
     id: "silver",
     name: "SILVER FULL DETAIL",
-    description: "The complete interior + exterior transformation.",
+    description: "A full reset, inside and out. Best value for first-timers.",
     includes: [
       "Everything in Bronze Exterior Only",
-      "Everything in Interior Only",
-      "Complete top-to-bottom transformation",
+      "Everything in Bronze Interior Only",
+      "Drill-brush agitation on carpets & seats",
+      "Trim + steering wheel conditioned",
+      "Final quality inspection",
     ],
     prices: [
       { category: "Sedan & Small SUV/Crossover", price: 165 },
@@ -59,15 +61,15 @@ export const PACKAGES: ServicePackage[] = [
   {
     id: "gold",
     name: "GOLD PREMIUM FULL DETAIL",
-    description: "Our most thorough detail — premium products, premium results.",
+    description: "The complete transformation — restoration-level clean.",
     includes: [
       "Everything in Silver Full Detail",
-      "Steam cleaning",
-      "Stain removal",
-      "Leather conditioning",
-      "Plastic trim conditioning",
-      "Protectant seal",
-      "Tire shine",
+      "Steam sanitization on all interior panels and seats",
+      "Carpet/seat stain extraction",
+      "Leather seat cleaning + conditioning",
+      "Trim conditioning + protectant",
+      "Tire shine + plastics dressed",
+      "Optional paint sealant (3–6 month)",
     ],
     prices: [
       { category: "Sedan & Small SUV/Crossover", price: 235 },
@@ -124,6 +126,12 @@ export const ADD_ONS: AddOn[] = [
     priceLabel: "$25–$50, based on inspection",
     priceLow: 25,
     priceHigh: 50,
+  },
+  {
+    id: "steam-sanitization",
+    name: "Total Interior Steam Sanitization",
+    priceLabel: "$30",
+    priceLow: 30,
   },
 ];
 

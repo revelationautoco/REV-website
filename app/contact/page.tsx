@@ -20,9 +20,9 @@ export default function ContactPage() {
             <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
               <div className="heading text-2xl">Service area</div>
               <p className="mt-2 text-sm text-muted">
-                Serving the local area within ~10–20 miles (varies by package and
-                schedule). If you’re outside the area, reach out and we’ll confirm
-                availability.
+                Servicing any location up to 20 miles away, free of travel charge.
+                Beyond 20 miles will be a travel fee calculated upon booking
+                confirmation.
               </p>
               <ul className="mt-4 grid gap-2 text-sm text-muted">
                 <li>
