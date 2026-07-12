@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { PACKAGES, ADD_ONS, formatPrice, getPackagePrice } from "@/lib/packages";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 // ---------------------------------------------------------------------------
 // Validation schema
@@ -35,6 +36,16 @@ type BookingInput = z.infer<typeof BookingSchema>;
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/** Converts a display time slot ("9:00 AM", "1:30 PM") to "HH:MM" for the DB. */
+function timeSlotToHHMM(slot: string): string {
+  const [time, period] = slot.split(" ");
+  const [h, m] = time.split(":");
+  let hour = parseInt(h, 10);
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+  return `${String(hour).padStart(2, "0")}:${m}`;
+}
 
 function buildEmailText(data: BookingInput): string {
   const pkg = PACKAGES.find((p) => p.id === data.packageId);
@@ -125,6 +136,80 @@ export async function POST(req: NextRequest) {
   }
 
   const data = parsed.data;
+  const requestedTime = timeSlotToHHMM(data.time);
+
+  // ── Server-side conflict check + DB insert ───────────────────────────────
+  // Wrapping in try/catch so a Supabase outage never silently breaks booking.
+  try {
+    console.log("[booking] Attempting Supabase init, URL:", process.env.SUPABASE_URL?.slice(0, 30));
+    const supabase = getSupabaseAdmin();
+
+    // Re-check for conflicts (client-side check may be stale)
+    const { data: existing, error: checkErr } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("requested_date", data.date)
+      .eq("requested_time", requestedTime)
+      .in("status", ["pending", "confirmed"])
+      .limit(1);
+
+    if (checkErr) throw checkErr;
+
+    if (existing && existing.length > 0) {
+      return NextResponse.json(
+        { error: "This time slot is no longer available. Please choose a different time." },
+        { status: 409 },
+      );
+    }
+
+    // Build add-ons payload for the jsonb column
+    const addonsData = (data.addOns ?? [])
+      .map((id) => {
+        const addon = ADD_ONS.find((a) => a.id === id);
+        return addon ? { id, name: addon.name, priceLabel: addon.priceLabel } : null;
+      })
+      .filter(Boolean);
+
+    const pkg = PACKAGES.find((p) => p.id === data.packageId);
+    const pkgPrice = pkg ? getPackagePrice(pkg, data.vehicleSize) : null;
+    const addonsTotal = (data.addOns ?? []).reduce((sum, id) => {
+      const addon = ADD_ONS.find((a) => a.id === id);
+      return sum + (addon?.priceLow ?? 0);
+    }, 0);
+
+    const { error: insertErr } = await supabase.from("bookings").insert({
+      requested_date: data.date,
+      requested_time: requestedTime,
+      vehicle_size: data.vehicleSize,
+      vehicle_year: data.vehicleYear,
+      vehicle_make: data.vehicleMake,
+      vehicle_model: data.vehicleModel,
+      package_id: data.packageId,
+      package_name: pkg?.name ?? data.packageId,
+      addons: addonsData,
+      estimated_total: pkgPrice !== null ? pkgPrice + addonsTotal : null,
+      full_name: data.fullName,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
+      notes: data.notes ?? null,
+      status: "pending",
+    });
+
+    if (insertErr) {
+      // Unique constraint violation = race condition: another request won the slot
+      if (insertErr.code === "23505") {
+        return NextResponse.json(
+          { error: "This time slot was just booked. Please choose a different time." },
+          { status: 409 },
+        );
+      }
+      // Any other DB error: log it but continue to email so the customer isn't blocked
+      console.error("[booking] Supabase insert error:", insertErr);
+    }
+  } catch (dbErr) {
+    console.error("[booking] Supabase unavailable, continuing without DB:", dbErr);
+  }
 
   // Send email
   const apiKey = process.env.RESEND_API_KEY;

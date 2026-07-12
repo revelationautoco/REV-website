@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { Resolver } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   IconCar,
   IconTruck,
@@ -24,7 +24,39 @@ import { cn } from "@/lib/cn";
 import type { ServicePackage } from "@/types/package";
 
 // ---------------------------------------------------------------------------
-// Schema — UNCHANGED
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Returns the earliest selectable date: at least 48 hours from now, Mon–Fri. */
+function getMinBookingDate(): string {
+  const fortyEightHoursOut = new Date(Date.now() + 48 * 60 * 60 * 1000);
+  const candidate = new Date(
+    fortyEightHoursOut.getFullYear(),
+    fortyEightHoursOut.getMonth(),
+    fortyEightHoursOut.getDate(),
+  );
+  while (candidate.getDay() === 0 || candidate.getDay() === 6) {
+    candidate.setDate(candidate.getDate() + 1);
+  }
+  return [
+    candidate.getFullYear(),
+    String(candidate.getMonth() + 1).padStart(2, "0"),
+    String(candidate.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+/** Converts a display time slot ("9:00 AM", "1:30 PM") to "HH:MM" for the DB. */
+function timeToHHMM(slot: string): string {
+  const [time, period] = slot.split(" ");
+  const [h, m] = time.split(":");
+  let hour = parseInt(h, 10);
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+  return `${String(hour).padStart(2, "0")}:${m}`;
+}
+
+// ---------------------------------------------------------------------------
+// Schema
 // ---------------------------------------------------------------------------
 
 const bookingSchema = z.object({
@@ -42,7 +74,14 @@ const bookingSchema = z.object({
     message: "Please select a package",
   }),
   addOns: z.array(z.string()).optional().default([]),
-  date: z.string().min(1, "Date is required"),
+  date: z
+    .string()
+    .min(1, "Date is required")
+    .refine((val) => {
+      if (!val) return true;
+      const day = new Date(val + "T12:00:00").getDay();
+      return day >= 1 && day <= 5;
+    }, "Please select a weekday (Mon–Fri)"),
   time: z.string().min(1, "Time is required"),
   fullName: z.string().min(1, "Full name is required"),
   phone: z
@@ -86,9 +125,9 @@ const BOOKING_PACKAGES = PACKAGES.filter(
 
 const TIME_SLOTS: string[] = (() => {
   const slots: string[] = [];
-  for (let hour = 8; hour <= 18; hour++) {
+  for (let hour = 9; hour <= 16; hour++) {
     for (let min = 0; min < 60; min += 30) {
-      if (hour === 18 && min > 0) break;
+      if (hour === 16 && min > 0) break;
       const period = hour < 12 ? "AM" : "PM";
       const displayHour = hour > 12 ? hour - 12 : hour;
       const displayMin = min === 0 ? "00" : "30";
@@ -110,14 +149,13 @@ export function BookingForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [slotConflict, setSlotConflict] = useState<string | null>(null);
+  const [isCheckingSlot, setIsCheckingSlot] = useState(false);
 
   const packageParam = searchParams.get("package") ?? "";
   const defaultPackageId = URL_PARAM_TO_PACKAGE_ID[packageParam] ?? undefined;
 
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const minDate = tomorrow.toISOString().split("T")[0];
+  const minDate = getMinBookingDate();
 
   const {
     register,
@@ -144,6 +182,38 @@ export function BookingForm() {
   });
 
   const watchAll = watch();
+
+  // Availability check — runs whenever date or time changes
+  useEffect(() => {
+    const date = watchAll.date;
+    const time = watchAll.time;
+    if (!date || !time) {
+      setSlotConflict(null);
+      setIsCheckingSlot(false);
+      return;
+    }
+    setIsCheckingSlot(true);
+    setSlotConflict(null);
+    const controller = new AbortController();
+    fetch(
+      `/api/booking/availability?date=${date}&time=${encodeURIComponent(timeToHHMM(time))}`,
+      { signal: controller.signal },
+    )
+      .then((r) => r.json())
+      .then((json: { available: boolean }) => {
+        setSlotConflict(
+          json.available
+            ? null
+            : "This time slot was just booked. Please choose a different time.",
+        );
+      })
+      .catch((err: unknown) => {
+        if ((err as { name?: string }).name !== "AbortError") setSlotConflict(null);
+      })
+      .finally(() => setIsCheckingSlot(false));
+    return () => controller.abort();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchAll.date, watchAll.time]);
 
   // Package + pricing
   const selectedPkg = BOOKING_PACKAGES.find((p) => p.id === watchAll.packageId);
@@ -204,6 +274,10 @@ export function BookingForm() {
 
   // Submit handler — UNCHANGED
   const onSubmit = async (data: BookingFormData) => {
+    if (slotConflict) {
+      setSubmitError(slotConflict);
+      return;
+    }
     setSubmitError(null);
     try {
       const res = await fetch("/api/booking", {
@@ -535,6 +609,9 @@ export function BookingForm() {
               {/* ── Date & Time ─────────────────────────────────────────── */}
               <div>
                 <SubSectionLabel>Preferred Date & Time</SubSectionLabel>
+                <p className="mt-1 text-[11px] text-muted/70">
+                  Mon–Fri only · Minimum 48 hours advance notice
+                </p>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   <div>
                     <FieldLabel required>Date</FieldLabel>
@@ -559,6 +636,16 @@ export function BookingForm() {
                     <FieldError message={errors.time?.message} />
                   </div>
                 </div>
+                {isCheckingSlot && (
+                  <p className="mt-1.5 text-[11px] text-muted">
+                    Checking availability…
+                  </p>
+                )}
+                {slotConflict && !isCheckingSlot && (
+                  <p className="mt-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
+                    {slotConflict}
+                  </p>
+                )}
               </div>
 
               {/* ── Contact Info ────────────────────────────────────────── */}
@@ -629,10 +716,14 @@ export function BookingForm() {
               {/* ── Submit button ────────────────────────────────────────── */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isCheckingSlot || !!slotConflict}
                 className="w-full rounded-full bg-accent py-4 text-base font-semibold text-white transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent/60 disabled:opacity-60"
               >
-                {isSubmitting ? "Sending Request…" : "Request Booking"}
+                {isCheckingSlot
+                  ? "Checking availability…"
+                  : isSubmitting
+                    ? "Sending Request…"
+                    : "Request Booking"}
               </button>
             </div>
           </div>
