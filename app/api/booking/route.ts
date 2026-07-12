@@ -141,7 +141,6 @@ export async function POST(req: NextRequest) {
   // ── Server-side conflict check + DB insert ───────────────────────────────
   // Wrapping in try/catch so a Supabase outage never silently breaks booking.
   try {
-    console.log("[booking] Attempting Supabase init, URL:", process.env.SUPABASE_URL?.slice(0, 30));
     const supabase = getSupabaseAdmin();
 
     // Re-check for conflicts (client-side check may be stale)
