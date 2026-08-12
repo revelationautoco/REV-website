@@ -38,11 +38,13 @@ export default function Home() {
 
               <HomeHeroCtas />
 
-              <div className="mt-8 grid grid-cols-3 gap-2 rounded-2xl border-2 border-border bg-surface p-3 md:gap-3 md:p-4">
+              <div className="mt-8 grid grid-cols-2 gap-2 rounded-2xl border-2 border-border bg-surface p-3 md:gap-3 md:p-4">
                 <Stat label="" value="6+ Years of Experience" />
                 <Stat label="Average rating" value="5.0★" />
-                <Stat label="Service area" value="10-30 MI" />
               </div>
+              <p className="mt-3 text-sm font-medium text-foreground md:text-base">
+                Servicing Southlake, Keller, Coppell &amp; surrounding areas.
+              </p>
             </div>
           </div>
         </Container>

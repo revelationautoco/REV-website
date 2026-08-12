@@ -20,9 +20,9 @@ export default function ContactPage() {
             <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
               <div className="heading text-2xl">Service area</div>
               <p className="mt-2 text-sm text-muted">
-                Servicing any location up to 20 miles away, free of travel charge.
-                Beyond 20 miles will be a travel fee calculated upon booking
-                confirmation.
+                Servicing Southlake, Keller, Coppell &amp; surrounding areas. If
+                you&rsquo;re outside our usual range, reach out and we&rsquo;ll
+                confirm availability.
               </p>
               <ul className="mt-4 grid gap-2 text-sm text-muted">
                 <li>
