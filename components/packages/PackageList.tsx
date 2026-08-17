@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { formatPrice, PACKAGES } from "@/lib/packages";
+import { ContactQuotePackageCard } from "@/components/packages/ContactQuotePackageCard";
+import { PackageMarketingPrice } from "@/components/packages/PackageMarketingPrice";
+import { getPackageCardPackages } from "@/lib/packages";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import type { ServicePackage } from "@/types/package";
@@ -11,26 +13,30 @@ export function PackageList({
 }: {
   onBook: (packageId: string) => void;
 }) {
-  const bronzeExterior = PACKAGES.find((p) => p.id === "bronze-exterior");
-  const interior = PACKAGES.find((p) => p.id === "interior");
-  const silver = PACKAGES.find((p) => p.id === "silver");
-  const gold = PACKAGES.find((p) => p.id === "gold");
-  const specialty = PACKAGES.find((p) => p.id === "specialty");
+  const packages = getPackageCardPackages();
+  const bookable = packages.filter((p) => !p.contactOnly);
+  const paintCorrection = packages.find((p) => p.id === "paint-correction");
 
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="flex flex-col gap-4 md:flex-row w-full">
-        {bronzeExterior ? <PackageCard pkg={bronzeExterior} onBook={onBook} /> : null}
-        {interior ? <PackageCard pkg={interior} onBook={onBook} /> : null}
+        {bookable.slice(0, 2).map((pkg) => (
+          <PackageCard key={pkg.id} pkg={pkg} onBook={onBook} />
+        ))}
       </div>
       <div className="flex flex-col gap-4 md:flex-row w-full">
-        {silver ? <PackageCard pkg={silver} onBook={onBook} /> : null}
-        {gold ? <PackageCard pkg={gold} onBook={onBook} /> : null}
+        {bookable.slice(2, 4).map((pkg) => (
+          <PackageCard key={pkg.id} pkg={pkg} onBook={onBook} />
+        ))}
       </div>
-      {specialty ? (
-        <div className="flex flex-col gap-4 md:flex-row w-full">
-          <PackageCard pkg={specialty} onBook={onBook} className="md:max-w-[calc(50%-8px)]" />
-        </div>
+      {paintCorrection ? (
+        <ContactQuotePackageCard
+          title={paintCorrection.name}
+          body={paintCorrection.description}
+          ctaLabel={paintCorrection.ctaLabel}
+          accentBorder
+          className="md:max-w-[calc(50%-8px)]"
+        />
       ) : null}
     </div>
   );
@@ -45,8 +51,7 @@ function PackageCard({
   onBook: (packageId: string) => void;
   className?: string;
 }) {
-  const showDuration =
-    pkg.durationSedan || pkg.durationLarge;
+  const showDuration = pkg.durationSedan || pkg.durationLarge;
   const sameDuration =
     pkg.durationSedan && pkg.durationSedan === pkg.durationLarge;
   const durationText = sameDuration
@@ -69,11 +74,11 @@ function PackageCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h3 className="heading text-2xl">{pkg.name}</h3>
             {pkg.popular && (
               <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                Premium
+                Most Popular
               </span>
             )}
           </div>
@@ -81,27 +86,29 @@ function PackageCard({
         </div>
       </div>
 
-      <ul className="mt-4 grid gap-2 text-sm text-muted flex-1">
-        {pkg.includes.map((x) => (
-          <li key={x} className="flex gap-2">
-            <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-            <span>{x}</span>
-          </li>
-        ))}
-      </ul>
+      {pkg.includes.length > 0 && (
+        <ul className="mt-4 grid gap-2 text-sm text-muted flex-1">
+          {pkg.includes.map((x) => (
+            <li key={x} className="flex gap-2">
+              <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              <span>{x}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {pkg.prices?.length ? (
         <div className="mt-5 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-muted whitespace-nowrap">Sedan / Small SUV —</div>
-            <div className="whitespace-nowrap font-bold text-accent">
-              {formatPrice(pkg.prices[0].price)}
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+            <div className="text-muted">Sedan / Small SUV —</div>
+            <div className="sm:text-right">
+              <PackageMarketingPrice tier={pkg.prices[0]} />
             </div>
           </div>
-          <div className="mt-2 flex items-center justify-between gap-3">
-            <div className="text-muted whitespace-nowrap">Large SUV / Truck / Van —</div>
-            <div className="whitespace-nowrap font-bold text-accent">
-              {formatPrice(pkg.prices[1].price)}
+          <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+            <div className="text-muted">Large SUV / Truck / Van —</div>
+            <div className="sm:text-right">
+              <PackageMarketingPrice tier={pkg.prices[1]} />
             </div>
           </div>
           {showDuration && (
@@ -112,7 +119,7 @@ function PackageCard({
         </div>
       ) : (
         <div className="mt-5 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs">
-          <div className="whitespace-nowrap font-bold text-accent">
+          <div className="font-bold text-accent">
             {pkg.pricingLabel ?? "Custom Quote"}
           </div>
         </div>

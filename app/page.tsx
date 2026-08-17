@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { formatPrice, PACKAGES } from "@/lib/packages";
+import { PACKAGES } from "@/lib/packages";
+import { ContactQuotePackageCard } from "@/components/packages/ContactQuotePackageCard";
+import { PackageMarketingPrice } from "@/components/packages/PackageMarketingPrice";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { GoogleReviews } from "@/components/reviews/GoogleReviews";
 import { HomeFinalCtas, HomeHeroCtas } from "@/components/home/HomeCtas";
@@ -31,10 +33,15 @@ export default function Home() {
                 <br />
                 Driveway convenience.
               </h1>
-              <p className="mt-5 max-w-lg text-base text-muted md:text-lg">
-                Complete vehicle care—with premium washes, deep interior cleaning, and
-                lasting protection—built around your schedule.
-              </p>
+              <div className="mt-5 max-w-lg text-base text-muted md:text-lg">
+                <p className="font-medium text-foreground">Offering:</p>
+                <ul className="mt-2 grid gap-1.5">
+                  <li>• Premium interior &amp; exterior detailing services</li>
+                  <li>• Ceramic coating</li>
+                  <li>• Paint correction</li>
+                  <li>• Vinyl wraps &amp; PPF</li>
+                </ul>
+              </div>
 
               <HomeHeroCtas />
 
@@ -42,9 +49,6 @@ export default function Home() {
                 <Stat label="" value="6+ Years of Experience" />
                 <Stat label="Average rating" value="5.0★" />
               </div>
-              <p className="mt-3 text-sm font-medium text-foreground md:text-base">
-                Servicing Southlake, Keller, Coppell &amp; surrounding areas.
-              </p>
             </div>
           </div>
         </Container>
@@ -65,50 +69,73 @@ export default function Home() {
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {PACKAGES.map((p) => (
-              <Link
-                key={p.id}
-                href={`/packages?package=${p.id}#book`}
-                className="group rounded-2xl border-2 border-border bg-white p-6 transition hover:shadow-sm"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="heading text-2xl">{p.name}</div>
-                  </div>
-                  <div className="text-right text-sm">
-                    {p.prices?.length ? (
-                      <>
-                        <div className="text-muted">
-                          Sedan/Small SUV:{" "}
-                          <span className="font-medium text-foreground">
-                            {formatPrice(p.prices[0].price)}
+            {PACKAGES.map((p) =>
+              p.contactOnly ? (
+                <ContactQuotePackageCard
+                  key={p.id}
+                  title={p.name}
+                  body={p.description}
+                  ctaLabel={p.ctaLabel}
+                  accentBorder
+                />
+              ) : (
+                <Link
+                  key={p.id}
+                  href={`/packages?package=${p.id}#book`}
+                  className="group rounded-2xl border-2 border-border bg-white p-6 transition hover:shadow-sm"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="heading text-2xl">{p.name}</div>
+                        {p.popular && (
+                          <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                            Most Popular
                           </span>
-                        </div>
-                        <div className="text-muted">
-                          Large SUV/Truck:{" "}
-                          <span className="font-medium text-foreground">
-                            {formatPrice(p.prices[1].price)}
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="font-bold text-accent">Custom Quote</div>
-                    )}
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-sm sm:shrink-0 sm:text-right">
+                      {p.prices?.length ? (
+                        <>
+                          <div className="text-muted">
+                            Sedan/Small SUV:{" "}
+                            <PackageMarketingPrice
+                              tier={p.prices[0]}
+                              offerClassName="font-medium text-foreground"
+                              baseClassName="text-xs text-muted line-through"
+                            />
+                          </div>
+                          <div className="mt-1 text-muted sm:mt-0.5">
+                            Large SUV/Truck:{" "}
+                            <PackageMarketingPrice
+                              tier={p.prices[1]}
+                              offerClassName="font-medium text-foreground"
+                              baseClassName="text-xs text-muted line-through"
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="font-bold text-accent">Custom Quote</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <ul className="mt-4 grid gap-2 text-sm text-muted">
-                  {p.includes.slice(0, 4).map((x) => (
-                    <li key={x} className="flex gap-2">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-                      <span>{x}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-5 text-sm font-medium text-foreground underline-offset-4 group-hover:underline decoration-foreground">
-                  Book this package →
-                </div>
-              </Link>
-            ))}
+                  {p.includes.length > 0 && (
+                    <ul className="mt-4 grid gap-2 text-sm text-muted">
+                      {p.includes.slice(0, 4).map((x) => (
+                        <li key={x} className="flex gap-2">
+                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="mt-5 text-sm font-medium text-foreground underline-offset-4 group-hover:underline decoration-foreground">
+                    Book this package →
+                  </div>
+                </Link>
+              ),
+            )}
           </div>
         </Container>
       </section>

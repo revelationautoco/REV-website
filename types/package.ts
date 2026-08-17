@@ -3,13 +3,17 @@ export type PackageTier =
   | "interior"
   | "silver"
   | "gold"
-  | "specialty";
+  | "specialty"
+  | "paint-correction";
 
 export type VehicleCategory = "Sedan & Small SUV/Crossover" | "Large SUV & Truck";
 
 export interface PriceTier {
   category: VehicleCategory;
+  /** Transactional price — used for booking, emails, and DB totals */
   price: number;
+  /** Optional display-only strikethrough price for marketing promos */
+  basePrice?: number;
 }
 
 export interface AddOn {
@@ -32,6 +36,8 @@ export interface ServicePackage {
   pricingLabel?: string;
   ctaLabel?: string;
   popular?: boolean;
+  /** Contact-only offering — no booking; routes to /contact */
+  contactOnly?: boolean;
   /** Short "best for" context line, shown in the inclusions popup */
   bestFor?: string;
   /** Estimated service duration for Sedan / Small SUV */

@@ -18,10 +18,12 @@ import {
   formatPrice,
   getPackagePrice,
   getPackageDuration,
+  getBookingPackages,
   URL_PARAM_TO_PACKAGE_ID,
 } from "@/lib/packages";
 import { cn } from "@/lib/cn";
 import type { ServicePackage } from "@/types/package";
+import { ContactQuotePackageCard } from "@/components/packages/ContactQuotePackageCard";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -115,13 +117,9 @@ const zodV4Resolver: Resolver<BookingFormData> = async (values) => {
 // Constants — UNCHANGED
 // ---------------------------------------------------------------------------
 
-const BOOKING_PACKAGES = PACKAGES.filter(
-  (p) =>
-    p.id === "bronze-exterior" ||
-    p.id === "interior" ||
-    p.id === "silver" ||
-    p.id === "gold",
-);
+const BOOKING_PACKAGES = getBookingPackages();
+
+const PAINT_CORRECTION_PACKAGE = PACKAGES.find((p) => p.id === "paint-correction");
 
 const TIME_SLOTS: string[] = (() => {
   const slots: string[] = [];
@@ -381,6 +379,16 @@ export function BookingForm() {
                   />
                 );
               })}
+              {PAINT_CORRECTION_PACKAGE ? (
+                <ContactQuotePackageCard
+                  title={PAINT_CORRECTION_PACKAGE.name}
+                  body={PAINT_CORRECTION_PACKAGE.description}
+                  ctaLabel={PAINT_CORRECTION_PACKAGE.ctaLabel}
+                  accentBorder
+                  compact
+                  className="col-span-2"
+                />
+              ) : null}
             </div>
             <FieldError message={errors.packageId?.message} />
           </StepCard>
@@ -908,6 +916,11 @@ function PackageCard({
       >
         {pkg.name}
       </div>
+      {pkg.popular && (
+        <span className="mt-1 inline-block rounded-full bg-accent px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+          Most Popular
+        </span>
+      )}
       <div className="mt-1.5 text-lg font-bold text-accent">
         {price !== null ? formatPrice(price) : "—"}
       </div>
@@ -921,16 +934,18 @@ function PackageCard({
       </p>
 
       {/* "See what's included" trigger */}
-      <button
-        type="button"
-        onClick={handleLinkClick}
-        className={cn(
-          "mt-2 text-[11px] underline underline-offset-2 transition focus:outline-none",
-          selected ? "text-white/50 hover:text-white/80" : "text-muted/60 hover:text-muted",
-        )}
-      >
-        See what&apos;s included
-      </button>
+      {pkg.includes.length > 0 && (
+        <button
+          type="button"
+          onClick={handleLinkClick}
+          className={cn(
+            "mt-2 text-[11px] underline underline-offset-2 transition focus:outline-none",
+            selected ? "text-white/50 hover:text-white/80" : "text-muted/60 hover:text-muted",
+          )}
+        >
+          See what&apos;s included
+        </button>
+      )}
 
       {isPopupOpen && (
         <InclusionsPopup

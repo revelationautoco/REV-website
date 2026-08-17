@@ -20,25 +20,21 @@ export default function ContactPage() {
             <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
               <div className="heading text-2xl">Service area</div>
               <p className="mt-2 text-sm text-muted">
-                Servicing Southlake, Keller, Coppell &amp; surrounding areas. If
-                you&rsquo;re outside our usual range, reach out and we&rsquo;ll
-                confirm availability.
+                Servicing Southlake, Keller, Coppell &amp; surrounding areas.
+                Outside our usual range? We&rsquo;ll still come to you — a mobile
+                fee applies at a per-mile rate.
               </p>
               <ul className="mt-4 grid gap-2 text-sm text-muted">
-                <li>
-                  • Conveniently servicing your vehicle at any location you need!
-                </li>
-                <li>
-                  • Special rates for businesses & groups of vehicles upon
-                  request.
-                </li>
-                <li>• Fleet appointments available on request.</li>
+                <li>• We service your vehicle at any location you need</li>
+                <li>• Special rates for businesses &amp; multi-vehicle groups</li>
+                <li>• Fleet appointments available on request</li>
               </ul>
             </div>
           </div>
 
           <div className="rounded-2xl border-2 border-border bg-white p-6 md:p-8">
             <h2 className="heading text-2xl">Get in touch</h2>
+            <p className="mt-1 text-sm text-muted">Owner, Avery Stringer</p>
             <dl className="mt-6 space-y-6">
               <div>
                 <dt className="text-sm text-muted">Phone</dt>

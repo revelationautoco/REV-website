@@ -1,18 +1,61 @@
-import type { ServicePackage, AddOn } from "@/types/package";
+import type { PackageTier, ServicePackage, AddOn } from "@/types/package";
 
 export const PACKAGES: ServicePackage[] = [
   {
+    id: "gold",
+    name: "Revelation Premium Detail",
+    description: "The complete transformation — restoration-level clean.",
+    includes: [
+      "Everything in the Revelation Complete Detail",
+      "Clay bar decontamination",
+      "Iron deposit remover treatment",
+      "3-Month paint sealant applied over decontaminated paint",
+      "Steam sanitization on all interior panels and seats",
+      "Minor carpet & seat stain extraction",
+      "Leather & plastic conditioner/protectant",
+    ],
+    prices: [
+      { category: "Sedan & Small SUV/Crossover", price: 310 },
+      { category: "Large SUV & Truck", price: 350 },
+    ],
+    durationSedan: "2–4 hrs",
+    durationLarge: "2–4 hrs",
+  },
+  {
+    id: "silver",
+    name: "Revelation Complete Detail",
+    description: "A full reset, inside and out. Best value for first-timers.",
+    includes: [
+      "Pre-rinse, foam bath & soft hand wash",
+      "Wheels, tires & wheel wells deep cleaned",
+      "Tire dressing applied",
+      "3-Month paint sealant for gloss & protection",
+      "Door jambs, fuel door & exterior trim detailed",
+      "Full interior vacuum (seats, carpets, mats)",
+      "All hard surfaces cleaned (dash, console, vents, panels, cup holders)",
+      "Interior windows cleaned",
+      "Final quality inspection",
+    ],
+    prices: [
+      { category: "Sedan & Small SUV/Crossover", price: 179, basePrice: 210 },
+      { category: "Large SUV & Truck", price: 199, basePrice: 235 },
+    ],
+    durationSedan: "2–3.5 hrs",
+    durationLarge: "2–4 hrs",
+    popular: true,
+  },
+  {
     id: "bronze-exterior",
-    name: "BRONZE EXTERIOR ONLY",
+    name: "Exterior Only Detail",
     description: "The perfect upkeep wash. Fast, thorough, gentle on paint.",
     bestFor: "Weekly/bi-weekly maintenance",
     includes: [
-      "High-pressure pre-rinse + foam pre-soak",
-      "Hand wash (microfiber wash mitt)",
+      "Pre-rinse + foam bath",
+      "Soft hand wash (microfiber wash mitt)",
       "Wheels + tires detailed (wheel face & barrels)",
+      "3-Month paint sealant for added gloss & protection",
       "Tire dressing applied",
-      "Exterior glass & mirrors cleaned streak-free",
-      "Door jambs & fuel door wiped down",
+      "Door jambs & fuel door detailed",
       "Final quality inspection",
     ],
     prices: [
@@ -24,7 +67,7 @@ export const PACKAGES: ServicePackage[] = [
   },
   {
     id: "interior",
-    name: "BRONZE INTERIOR ONLY",
+    name: "Interior Only Detail",
     description: "Deep interior cleaning for a fresh, reset cabin.",
     includes: [
       "Full interior vacuum (seats, carpets, mats, crevices)",
@@ -41,43 +84,12 @@ export const PACKAGES: ServicePackage[] = [
     durationLarge: "1.5–2.5 hrs",
   },
   {
-    id: "silver",
-    name: "SILVER FULL DETAIL",
-    description: "A full reset, inside and out. Best value for first-timers.",
-    includes: [
-      "Everything in Bronze Exterior Only",
-      "Everything in Bronze Interior Only",
-      "Drill-brush agitation on carpets & seats",
-      "Trim + steering wheel conditioned",
-      "Final quality inspection",
-    ],
-    prices: [
-      { category: "Sedan & Small SUV/Crossover", price: 165 },
-      { category: "Large SUV & Truck", price: 225 },
-    ],
-    durationSedan: "2–3.5 hrs",
-    durationLarge: "2–4 hrs",
-  },
-  {
-    id: "gold",
-    name: "GOLD PREMIUM FULL DETAIL",
-    description: "The complete transformation — restoration-level clean.",
-    includes: [
-      "Everything in Silver Full Detail",
-      "Steam sanitization on all interior panels and seats",
-      "Carpet/seat stain extraction",
-      "Leather seat cleaning + conditioning",
-      "Trim conditioning + protectant",
-      "Tire shine + plastics dressed",
-      "Optional paint sealant (3–6 month)",
-    ],
-    prices: [
-      { category: "Sedan & Small SUV/Crossover", price: 235 },
-      { category: "Large SUV & Truck", price: 315 },
-    ],
-    durationSedan: "2–4 hrs",
-    durationLarge: "2–4 hrs",
-    popular: true,
+    id: "paint-correction",
+    name: "Paint Correction & Ceramic Coatings",
+    description: "Call for a free custom quote today!",
+    includes: [],
+    contactOnly: true,
+    ctaLabel: "Contact Us",
   },
   {
     id: "specialty",
@@ -93,6 +105,35 @@ export const PACKAGES: ServicePackage[] = [
     ctaLabel: "Request a Quote",
   },
 ];
+
+/** Display order for package cards on /packages and the booking form */
+export const PACKAGE_CARD_ORDER = [
+  "gold",
+  "silver",
+  "bronze-exterior",
+  "interior",
+  "paint-correction",
+] as const satisfies readonly PackageTier[];
+
+/** Bookable packages in display order (excludes contact-only cards) */
+export const BOOKING_PACKAGE_IDS = [
+  "gold",
+  "silver",
+  "bronze-exterior",
+  "interior",
+] as const satisfies readonly PackageTier[];
+
+export function getPackageCardPackages(): ServicePackage[] {
+  return PACKAGE_CARD_ORDER.map((id) => PACKAGES.find((p) => p.id === id)).filter(
+    (p): p is ServicePackage => p != null,
+  );
+}
+
+export function getBookingPackages(): ServicePackage[] {
+  return BOOKING_PACKAGE_IDS.map((id) => PACKAGES.find((p) => p.id === id)).filter(
+    (p): p is ServicePackage => p != null,
+  );
+}
 
 export const ADD_ONS: AddOn[] = [
   {
@@ -111,14 +152,14 @@ export const ADD_ONS: AddOn[] = [
   {
     id: "headlight-restoration",
     name: "Headlight Restoration",
-    priceLabel: "$69.99",
-    priceLow: 69.99,
+    priceLabel: "$99",
+    priceLow: 99,
   },
   {
     id: "engine-bay",
-    name: "Engine Bay Cleaning",
-    priceLabel: "$49.99",
-    priceLow: 49.99,
+    name: "Engine bay detail",
+    priceLabel: "$50",
+    priceLow: 50,
   },
   {
     id: "stain-removal",
@@ -129,9 +170,15 @@ export const ADD_ONS: AddOn[] = [
   },
   {
     id: "steam-sanitization",
-    name: "Total Interior Steam Sanitization",
-    priceLabel: "$30",
-    priceLow: 30,
+    name: "Steam sanitization",
+    priceLabel: "$25 per row",
+    priceLow: 25,
+  },
+  {
+    id: "leather-conditioner",
+    name: "Leather conditioner/protectant",
+    priceLabel: "$25 per row",
+    priceLow: 25,
   },
 ];
 
